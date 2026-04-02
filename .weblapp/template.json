@@ -1,0 +1,39 @@
+{
+  "name": "mysql",
+  "displayName": "MySQL",
+  "description": "MySQL database template with schema design, migrations, and query patterns",
+  "category": "database",
+  "language": "sql",
+  "framework": "mysql",
+  "stack": ["mysql", "sql"],
+  "features": ["schema-design", "migrations", "indexing", "stored-procedures"],
+  "commands": {},
+  "packageManager": "none",
+  "ci": {
+    "workflowTemplate": "mysql",
+    "runner": "ubuntu-latest",
+    "runtime": {
+      "name": null,
+      "version": null,
+      "setup": null,
+      "cache": null
+    },
+    "services": {
+      "mysql": {
+        "image": "mysql:8",
+        "env": {
+          "MYSQL_ROOT_PASSWORD": "test",
+          "MYSQL_DATABASE": "test_db"
+        },
+        "ports": ["3306:3306"],
+        "options": "--health-cmd=\"mysqladmin ping\" --health-interval=10s --health-timeout=5s --health-retries=5"
+      }
+    },
+    "steps": {
+      "install": null,
+      "build": null,
+      "test": null,
+      "lint": null
+    }
+  }
+}

@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify MySQL connection
+        run: |
+          sudo apt-get install -y mysql-client
+          mysql --host=127.0.0.1 --port=3306 -uroot -ptest -e "SHOW DATABASES;"
+
+      - name: Run migrations
+        run: |
+          if [ -f "schema.sql" ]; then
+            mysql --host=127.0.0.1 --port=3306 -uroot -ptest test_db < schema.sql
+          fi
